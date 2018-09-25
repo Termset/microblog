@@ -13,6 +13,9 @@ develop-eggs/
 dist/
 downloads/
 eggs/
+tmp/
+.idea/
+runp.py
 .eggs/
 lib/
 lib64/
