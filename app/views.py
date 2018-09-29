@@ -24,7 +24,7 @@ def edit():
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
-@app.route('index/<int:page>', methods=['GET', 'POST'])
+@app.route('/index/<int:page>', methods=['GET', 'POST'])
 @login_required
 def index(page=1):
     form = PostForm()
@@ -163,3 +163,17 @@ def internal_error(error):
 @lm.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+
+@app.route('/user/<nickname>')
+@app.route('/user/<nickname>/<int:page>')
+@login_required
+def user(nickname, page=1):
+    user = User.query.filter_by(nickname=nickname).first()
+    if user is None:
+        flash('User %s not found.' % nickname)
+        return redirect(url_for('index'))
+    posts = user.posts.paginate(page, POSTS_PER_PAGE, False)
+    return render_template('user.html',
+                           user=user,
+                           posts=posts)
